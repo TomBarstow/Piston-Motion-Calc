@@ -17,10 +17,10 @@ The output of this script can be useful for:
 * Arguing with people on car forums
 
 Input Example:
-[Input Example](https://github.com/TomBarstow/Piston-Motion-Calc/blob/main/example.png?raw=true)
+![Input Example](https://github.com/TomBarstow/Piston-Motion-Calc/blob/main/example.png?raw=true)
 
 Output Example Visualized as Graph:
-[Output Example](https://github.com/TomBarstow/Piston-Motion-Calc/blob/main/exampleGraph.png?raw=true)
+![Output Example](https://github.com/TomBarstow/Piston-Motion-Calc/blob/main/exampleGraph.png?raw=true)
 
 Future development:
 * Outputing peak velocity and angle to console
