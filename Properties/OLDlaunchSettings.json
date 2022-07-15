@@ -1,0 +1,9 @@
+{
+    "profiles": {
+        "PistonMotion": {
+            "commandName": "Project",
+            "commandLineArgs": "output.csv 100 170 10000",
+            "workingDirectory": "C:\\Users\\Macy\\Documents\\COding\\PistonMotion"
+        }
+    }
+}
