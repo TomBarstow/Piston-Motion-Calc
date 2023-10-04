@@ -1,9 +1,9 @@
  ```
  _____________       _____                   ______  ___     __________              
- ___  __ \\__(_)________  /_____________      ___   |/  /_______  /___(_)____________ 
- __  /_/ /_  /__  ___/  __/  __ \\_  __ \\     __  /|_/ /_  __ \\  __/_  /_  __ \\_  __ \\
+ ___  __ \\__(_)________  /_____________     ___   |/  /_______  /___(_)____________ 
+ __  /_/ /_  /__  ___/  __/  __ \\_  __ \\   __  /|_/ /_  __ \\  __/_  /_  __ \\_  __ \\
  _  ____/_  / _(__  )/ /_ / /_/ /  / / /     _  /  / / / /_/ / /_ _  / / /_/ /  / / /
- /_/     /_/  /____/ \\__/ \\____//_/ /_/      /_/  /_/  \\____/\\__/ /_/  \\____//_/ /_/ 
+ /_/     /_/  /____/ \\__/ \\____//_/ /_/    /_/  /_/  \\____/\\__/ /_/  \\____//_/ /_/ 
  ```
 
 This script calculates the velocity of an internal combustion engine's piston(s) during it's cycle.
@@ -26,5 +26,8 @@ CSV Output Example Visualized as Graph:
 
 
 Future development:
+* Piston to valve (p2v) modeling
+* Static and dynamic compression calculation
 * Piston acceleration
-* GUI with graphing output could be cool
+* Wrist pin offset (Left out right now because it seems to have a negligible effect on piston velocity)
+* GUI
