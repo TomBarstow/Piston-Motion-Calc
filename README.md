@@ -1,10 +1,9 @@
  ```
- _____ _     _                __  __       _   _                _____      _      
- |  __ (_)   | |              |  \/  |     | | (_)              / ____|    | |     
- | |__) | ___| |_ ___  _ __   | \  / | ___ | |_ _  ___  _ __   | |     __ _| | ___ 
- |  ___/ / __| __/ _ \| '_ \  | |\/| |/ _ \| __| |/ _ \| '_ \  | |    / _` | |/ __|
- | |   | \__ \ || (_) | | | | | |  | | (_) | |_| | (_) | | | | | |___| (_| | | (__ 
- |_|   |_|___/\__\___/|_| |_| |_|  |_|\___/ \__|_|\___/|_| |_|  \_____\__,_|_|\___|
+ _____________       _____                   ______  ___     __________              
+ ___  __ \\__(_)________  /_____________      ___   |/  /_______  /___(_)____________ 
+ __  /_/ /_  /__  ___/  __/  __ \\_  __ \\     __  /|_/ /_  __ \\  __/_  /_  __ \\_  __ \\
+ _  ____/_  / _(__  )/ /_ / /_/ /  / / /     _  /  / / / /_/ / /_ _  / / /_/ /  / / /
+ /_/     /_/  /____/ \\__/ \\____//_/ /_/      /_/  /_/  \\____/\\__/ /_/  \\____//_/ /_/ 
  ```
 
 This script calculates the velocity of an internal combustion engine's piston(s) during it's cycle.
@@ -17,16 +16,15 @@ The output of this script can be useful for:
 * Arguing with people on car forums
 
 
-Input Example:
+Console Example:
 
-![Input Example](https://github.com/TomBarstow/Piston-Motion-Calc/blob/main/example.png?raw=true)
+![Console Example](https://github.com/TomBarstow/Piston-Motion-Calc/blob/main/example.png?raw=true)
 
-Output Example Visualized as Graph:
+CSV Output Example Visualized as Graph:
 
 ![Output Example](https://github.com/TomBarstow/Piston-Motion-Calc/blob/main/exampleGraph.png?raw=true)
 
 
 Future development:
-* Outputing peak velocity and angle to console
 * Piston acceleration
 * GUI with graphing output could be cool
