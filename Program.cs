@@ -27,7 +27,7 @@ namespace PistonMotion
                 try
                 {
                     var arguments = new Arguments();
-                    var globals = new Globals();
+                    var results = new Results();
 
                     if (args.Length == 0)
                     {
@@ -57,10 +57,12 @@ namespace PistonMotion
                         arguments.GasketHeight = double.Parse(Console.ReadLine());
                         Console.Write("Max RPM: \t \t \t \t");
                         arguments.RPM = int.Parse(Console.ReadLine());
+                        Console.Write("Cylinder Count: \t \t \t");
+                        arguments.CylinderCount = int.Parse(Console.ReadLine());
                     }
                     else
                     {
-                        Console.WriteLine($"Arguments: {args[0]},{args[1]},{args[2]},{args[3]},{args[4]},{args[5]},{args[6]},{args[7]}");
+                        Console.WriteLine($"Arguments: {args[0]},{args[1]},{args[2]},{args[3]},{args[4]},{args[5]},{args[6]},{args[7]},{args[8]}");
                         arguments.Filename = args[0];
                         arguments.Bore = double.Parse(args[1]);
                         arguments.Stroke = double.Parse(args[2]);
@@ -69,15 +71,16 @@ namespace PistonMotion
                         arguments.CompHeight= double.Parse(args[5]);
                         arguments.GasketHeight= double.Parse(args[6]);
                         arguments.RPM = int.Parse(args[7]);
+                        arguments.CylinderCount= int.Parse(args[8]);
                         break;
                     }
 
                     Console.WriteLine("\n");
-                    var results = Calculate(arguments, globals);
+                    var csvResults = Calculate(arguments, results);
 
-                    ConsoleOutput(globals.MaxVelocity, globals.MaxVelocityDeg);
+                    ConsoleOutput(results);
 
-                    SaveResults(arguments.FileLocation, arguments.Filename, results);
+                    SaveResults(arguments.FileLocation, arguments.Filename, csvResults);
                     Console.WriteLine("\n\n");
 
                 }
@@ -91,17 +94,25 @@ namespace PistonMotion
 
         }
 
-        public static List<PistonResult> Calculate(Arguments arguments, Globals globals)
+        public static List<PistonResult> Calculate(Arguments arguments, Results results)
         {
-            var results = new List<PistonResult>();
+            var csvResults = new List<PistonResult>();
 
             double angVelocity = 2 * Math.PI * (arguments.RPM / 60);
             double radius = arguments.Stroke / 2;
 
             double totalDeckHeight = arguments.DeckHeight + arguments.GasketHeight;
 
-            //double maxVelocity = 0.0f;
-            //int maxVelocityDeg;
+            //Calculate static results; displacement, bore to stroke, rod ratio, etc.
+            //Displacement per cylinder
+            results.Displacement = Math.PI * Math.Pow(arguments.Bore / 2, 2) * arguments.Stroke * arguments.CylinderCount;
+            //Bore to stroke ratio
+            results.BoreRatio = arguments.Bore / arguments.Stroke;
+            //Rod ratio
+            results.RodRatio = arguments.RodLength / arguments.Stroke;
+            //Piston to deck
+            results.Piston2deck = (arguments.DeckHeight + arguments.GasketHeight) - (arguments.RodLength + arguments.CompHeight + radius);
+
 
             for (int angle = 0; angle <= 180; angle++)
             {
@@ -122,17 +133,17 @@ namespace PistonMotion
 
                 var result = new PistonResult(angle, pistonPosition, velocity);
 
-                results.Add(result);
+                csvResults.Add(result);
 
                 //Check for peak velocity
-                if (globals.MaxVelocity < velocity)
+                if (results.MaxVelocity < velocity)
                 {
-                    globals.MaxVelocity = velocity;
-                    globals.MaxVelocityDeg = angle;
+                    results.MaxVelocity = velocity;
+                    results.MaxVelocityDeg = angle;
                 }
             }
 
-            return results;
+            return csvResults;
         }
         //Method for calculating piston velocity
         private static double CalculateVelocity(double angVelocity, double negRadius, double sqrRadius, double sinAngle, double cosAngle, double sqrRodl)
@@ -141,12 +152,17 @@ namespace PistonMotion
         }
 
         //Method for outputting max velocity to console
-        public static void ConsoleOutput(double maxVel, int maxDeg)
+        public static void ConsoleOutput(Results results)
         {
-            Console.WriteLine("Peak piston velocity is " + maxVel + " at " + maxDeg + " degrees");
+            Console.WriteLine("Total swept displacement: \t \t" + results.Displacement);
+            Console.WriteLine("Bore to Stroke Ratio: \t \t \t" + results.BoreRatio);
+            Console.WriteLine("Rod Ratio: \t \t \t \t" + results.RodRatio);
+            Console.WriteLine("Piston to deck including gasket: \t" + results.Piston2deck);
+            Console.WriteLine("(Negative value is 'out of the hole') \t \t \t");
+            Console.WriteLine("Peak piston velocity is " + results.MaxVelocity + " at " + results.MaxVelocityDeg + " degrees \n");
         }
 
-        public static void SaveResults(string fileLocation, string fileName, List<PistonResult> results)
+        public static void SaveResults(string fileLocation, string fileName, List<PistonResult> csvResults)
         {
             if (!Directory.Exists(fileLocation))
             {
@@ -161,7 +177,7 @@ namespace PistonMotion
             var stringBuilder = new StringBuilder();
             stringBuilder.AppendLine("angle,ppos,pvel");
 
-            foreach(var result in results)
+            foreach(var result in csvResults)
             {
                 stringBuilder.AppendLine($"{result}");
             }

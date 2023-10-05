@@ -11,7 +11,7 @@
         public double CompHeight { get; set; }
         public double GasketHeight { get; set; }
         public int RPM { get; set; }
-
+        public int CylinderCount { get; set; }
 
     }
 }
