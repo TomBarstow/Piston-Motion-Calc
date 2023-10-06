@@ -1,12 +1,7 @@
- ```
- _____________       _____                   ______  ___     __________              
- ___  __ \\__(_)________  /_____________     ___   |/  /_______  /___(_)____________ 
- __  /_/ /_  /__  ___/  __/  __ \\_  __ \\   __  /|_/ /_  __ \\  __/_  /_  __ \\_  __ \\
- _  ____/_  / _(__  )/ /_ / /_/ /  / / /     _  /  / / / /_/ / /_ _  / / /_/ /  / / /
- /_/     /_/  /____/ \\__/ \\____//_/ /_/    /_/  /_/  \\____/\\__/ /_/  \\____//_/ /_/ 
- ```
+Piston Motion Calc v0.3
 
-This script calculates the velocity of an internal combustion engine's piston(s) during it's cycle.
+This script calculates the velocity of an reciprocating engine's piston(s) during it's cycle.
+It also calculates various other results, such as compression ratio. The goal is to keep elaborating on the code to create a useful kinematic model.
 
 The output of this script can be useful for:
 * Analyzing the affect of stroke, rod ratio, and max rpm on peak piston velocity and angle

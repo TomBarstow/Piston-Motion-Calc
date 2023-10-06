@@ -9,7 +9,7 @@
         public double BoreRatio {  get; set; }
         public double RodRatio { get; set; }
         public double Piston2deck { get; set; }
-
+        public double CompressionRatio { get; set; }
 
     }
 }

@@ -10,8 +10,6 @@ namespace PistonMotion
     /// </summary>
     class Program
     {
-        public double MaxVelocity { get; set; }
-        public int MaxVelocityDeg { get; set; }
         public static void Main(string[] args)
         {
             //Title
@@ -43,6 +41,16 @@ namespace PistonMotion
                         }
                         Console.Write("File name: \t \t \t \t");
                         arguments.Filename = arguments.FileLocation + Console.ReadLine() + ".csv";
+                        Console.Write("Using metric units (mm/cc), y/n? \t");
+                        string _checkIfMetric = Console.ReadLine();
+                        if (_checkIfMetric == null ^ _checkIfMetric == "n")
+                        {
+                            arguments.IsMetric = false;
+                        }
+                        else if (_checkIfMetric == "y")
+                        {
+                            arguments.IsMetric = true;
+                        }
                         Console.Write("Bore: \t \t \t \t \t");
                         arguments.Bore = double.Parse(Console.ReadLine());
                         Console.Write("Stroke: \t \t \t \t");
@@ -53,6 +61,11 @@ namespace PistonMotion
                         arguments.DeckHeight = double.Parse(Console.ReadLine());
                         Console.Write("Piston Compression Height: \t \t");
                         arguments.CompHeight = double.Parse(Console.ReadLine());
+                        Console.Write("Piston Dome Volume: \t \t \t");
+                        arguments.PistonVolume = float.Parse(Console.ReadLine());
+                        Console.Write("(Negative value for dish) \n");
+                        Console.Write("Combustion Chamber Volume: \t \t");
+                        arguments.ChamberVolume = float.Parse(Console.ReadLine());
                         Console.Write("Head Gasket Compressed Thickness: \t");
                         arguments.GasketHeight = double.Parse(Console.ReadLine());
                         Console.Write("Max RPM: \t \t \t \t");
@@ -63,22 +76,26 @@ namespace PistonMotion
                     else
                     {
                         Console.WriteLine($"Arguments: {args[0]},{args[1]},{args[2]},{args[3]},{args[4]},{args[5]},{args[6]},{args[7]},{args[8]}");
-                        arguments.Filename = args[0];
-                        arguments.Bore = double.Parse(args[1]);
-                        arguments.Stroke = double.Parse(args[2]);
-                        arguments.RodLength = double.Parse(args[3]);
-                        arguments.DeckHeight= double.Parse(args[4]);
-                        arguments.CompHeight= double.Parse(args[5]);
-                        arguments.GasketHeight= double.Parse(args[6]);
-                        arguments.RPM = int.Parse(args[7]);
-                        arguments.CylinderCount= int.Parse(args[8]);
+                        arguments.FileLocation = args[0];
+                        arguments.Filename = args[1];
+                        arguments.IsMetric = bool.Parse(args[2]);
+                        arguments.Bore = double.Parse(args[3]);
+                        arguments.Stroke = double.Parse(args[4]);
+                        arguments.RodLength = double.Parse(args[5]);
+                        arguments.DeckHeight= double.Parse(args[6]);
+                        arguments.CompHeight= double.Parse(args[7]);
+                        arguments.PistonVolume = float.Parse(args[8]);
+                        arguments.ChamberVolume = float.Parse(args[9]);
+                        arguments.GasketHeight= double.Parse(args[10]);
+                        arguments.RPM = int.Parse(args[11]);
+                        arguments.CylinderCount= int.Parse(args[12]);
                         break;
                     }
 
                     Console.WriteLine("\n");
                     var csvResults = Calculate(arguments, results);
 
-                    ConsoleOutput(results);
+                    ConsoleOutput(arguments, results);
 
                     SaveResults(arguments.FileLocation, arguments.Filename, csvResults);
                     Console.WriteLine("\n\n");
@@ -103,6 +120,17 @@ namespace PistonMotion
 
             double totalDeckHeight = arguments.DeckHeight + arguments.GasketHeight;
 
+            int _metricMod;
+            if (arguments.IsMetric)
+            {
+                _metricMod = 1000;
+            }
+            else
+            {
+                _metricMod = 0;
+            }
+
+
             //Calculate static results; displacement, bore to stroke, rod ratio, etc.
             //Displacement per cylinder
             results.Displacement = Math.PI * Math.Pow(arguments.Bore / 2, 2) * arguments.Stroke * arguments.CylinderCount;
@@ -112,6 +140,10 @@ namespace PistonMotion
             results.RodRatio = arguments.RodLength / arguments.Stroke;
             //Piston to deck
             results.Piston2deck = (arguments.DeckHeight + arguments.GasketHeight) - (arguments.RodLength + arguments.CompHeight + radius);
+            //Compression Ratio
+            results.CompressionRatio = (Math.PI * Math.Pow(arguments.Bore / 2, 2) * (arguments.GasketHeight + arguments.Stroke)) / ((arguments.ChamberVolume - arguments.PistonVolume) * _metricMod);
+ 
+            
 
 
             for (int angle = 0; angle <= 180; angle++)
@@ -152,13 +184,24 @@ namespace PistonMotion
         }
 
         //Method for outputting max velocity to console
-        public static void ConsoleOutput(Results results)
+        public static void ConsoleOutput(Arguments arguments, Results results)
         {
-            Console.WriteLine("Total swept displacement: \t \t" + results.Displacement);
+            int _metricMod;
+            if (arguments.IsMetric)
+            {
+                _metricMod = 1000;
+            }
+            else
+            {
+                _metricMod = 1;
+            }
+            
+            Console.WriteLine("Total swept displacement: \t \t" + results.Displacement / _metricMod);
             Console.WriteLine("Bore to Stroke Ratio: \t \t \t" + results.BoreRatio);
             Console.WriteLine("Rod Ratio: \t \t \t \t" + results.RodRatio);
             Console.WriteLine("Piston to deck including gasket: \t" + results.Piston2deck);
             Console.WriteLine("(Negative value is 'out of the hole') \t \t \t");
+            Console.WriteLine("Static Compression Ratio: \t \t" + results.CompressionRatio);
             Console.WriteLine("Peak piston velocity is " + results.MaxVelocity + " at " + results.MaxVelocityDeg + " degrees \n");
         }
 
