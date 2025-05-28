@@ -8,6 +8,8 @@
 
 This script calculates the velocity of an internal combustion engine's piston(s) during it's cycle.
 
+***This fork is for development of robust valve timing modeling, specifically for Piston to Valve (P2V) clearance.***
+
 The output of this script can be useful for:
 * Analyzing the affect of stroke, rod ratio, and max rpm on peak piston velocity and angle
 * Engine Management Tuning
@@ -18,11 +20,11 @@ The output of this script can be useful for:
 
 Console Example:
 
-![Console Example](https://github.com/TomBarstow/Piston-Motion-Calc/blob/main/example.png?raw=true)
+![Console Example](https://github.com/TomBarstow/Piston-Motion-Calc/blob/main/test_engine.png?raw=true)
 
 CSV Output Example Visualized as Graph:
 
-![Output Example](https://github.com/TomBarstow/Piston-Motion-Calc/blob/main/exampleGraph.png?raw=true)
+![Output Example](https://github.com/TomBarstow/Piston-Motion-Calc/blob/main/test_engine_csv.png?raw=true)
 
 
 Future development:
