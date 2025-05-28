@@ -133,7 +133,7 @@ namespace PistonMotion
 
             Console.Write($"Combustion Chamber Volume ({volumeUnits}): ");
             string chamberVolumeInput = Console.ReadLine();
-            arguments.ChamberVolume = string.IsNullOrWhiteSpace(chamberVolumeInput) ? 70.0 : double.Parse(chamberVolumeInput);
+            arguments.ChamberVolume = string.IsNullOrWhiteSpace(chamberVolumeInput) ? 80.0 : double.Parse(chamberVolumeInput);
 
             Console.Write($"Head Gasket Compressed Thickness ({units}): ");
             string gasketHeightInput = Console.ReadLine();
@@ -412,6 +412,59 @@ namespace PistonMotion
             return Math.Abs(angVelocity * (term1 + term2));
         }
 
+        private static string ConvertToConventionalTiming(double absoluteDegrees)
+        {
+            // 4-stroke cycle reference points:
+            // 0° = Compression TDC (start of power stroke)
+            // 180° = BDC (middle of power stroke)
+            // 360° = Exhaust TDC (end of exhaust stroke, start of intake)
+            // 540° = BDC (middle of intake stroke)
+            // 720° = Compression TDC (end of compression stroke)
+
+            // Normalize angle to 0-720 range
+            double angle = absoluteDegrees % 720;
+            if (angle < 0) angle += 720;
+
+            if (angle >= 0 && angle < 180)
+            {
+                // Power stroke: 0-180° ATDC
+                return $"{angle:F0}° ATDC";
+            }
+            else if (angle >= 180 && angle < 360)
+            {
+                // Exhaust stroke: 180-360° ATDC or measured from BDC
+                double fromBDC = angle - 180;
+                return $"{fromBDC:F0}° ABDC";
+            }
+            else if (angle >= 360 && angle < 540)
+            {
+                // Intake stroke: measured from intake TDC (360°)
+                double fromIntakeTDC = angle - 360;
+                if (fromIntakeTDC <= 90)
+                {
+                    return $"{fromIntakeTDC:F0}° ATDC";
+                }
+                else
+                {
+                    double toBDC = 540 - angle;
+                    return $"{toBDC:F0}° BBDC";
+                }
+            }
+            else // angle >= 540 && angle < 720
+            {
+                // Compression stroke: measured relative to compression TDC (720°/0°)
+                double fromBDC = angle - 540;
+                if (fromBDC <= 90)
+                {
+                    return $"{fromBDC:F0}° ABDC";
+                }
+                else
+                {
+                    double toTDC = 720 - angle;
+                    return $"{toTDC:F0}° BTDC";
+                }
+            }
+        }
         public static void DisplayResults(Arguments arguments, ConsoleResults results)
         {
             string units = arguments.IsMetric ? "mm" : "inches";
@@ -438,8 +491,17 @@ namespace PistonMotion
             if (arguments.IncludeCamProfile && arguments.CamSpec != null)
             {
                 Console.WriteLine("\n=== CAM TIMING SUMMARY ===");
-                Console.WriteLine($"Intake:  Opens {arguments.CamSpec.IntakeCam.OpeningPoint:F1}°, Closes {arguments.CamSpec.IntakeCam.ClosingPoint:F1}°, Max lift {arguments.CamSpec.IntakeCam.MaxLift * arguments.CamSpec.IntakeCam.RockerRatio:F3} {units}");
-                Console.WriteLine($"Exhaust: Opens {arguments.CamSpec.ExhaustCam.OpeningPoint:F1}°, Closes {arguments.CamSpec.ExhaustCam.ClosingPoint:F1}°, Max lift {arguments.CamSpec.ExhaustCam.MaxLift * arguments.CamSpec.ExhaustCam.RockerRatio:F3} {units}");
+
+                // Calculate conventional timing for intake
+                string intakeOpenConventional = ConvertToConventionalTiming(arguments.CamSpec.IntakeCam.OpeningPoint);
+                string intakeCloseConventional = ConvertToConventionalTiming(arguments.CamSpec.IntakeCam.ClosingPoint);
+
+                // Calculate conventional timing for exhaust
+                string exhaustOpenConventional = ConvertToConventionalTiming(arguments.CamSpec.ExhaustCam.OpeningPoint);
+                string exhaustCloseConventional = ConvertToConventionalTiming(arguments.CamSpec.ExhaustCam.ClosingPoint);
+
+                Console.WriteLine($"Intake:  Opens {arguments.CamSpec.IntakeCam.OpeningPoint:F1}° ({intakeOpenConventional}), Closes {arguments.CamSpec.IntakeCam.ClosingPoint:F1}° ({intakeCloseConventional}), Max lift {arguments.CamSpec.IntakeCam.MaxLift * arguments.CamSpec.IntakeCam.RockerRatio:F3} {units}");
+                Console.WriteLine($"Exhaust: Opens {arguments.CamSpec.ExhaustCam.OpeningPoint:F1}° ({exhaustOpenConventional}), Closes {arguments.CamSpec.ExhaustCam.ClosingPoint:F1}° ({exhaustCloseConventional}), Max lift {arguments.CamSpec.ExhaustCam.MaxLift * arguments.CamSpec.ExhaustCam.RockerRatio:F3} {units}");
             }
         }
 
