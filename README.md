@@ -20,11 +20,11 @@ The output of this script can be useful for:
 
 Console Example:
 
-![Console Example](https://github.com/TomBarstow/Piston-Motion-Calc/blob/main/test_engine.png?raw=true)
+![Console Example](https://github.com/TomBarstow/Piston-Motion-Calc/tree/p2v-update/test_engine.png?raw=true)
 
 CSV Output Example Visualized as Graph:
 
-![Output Example](https://github.com/TomBarstow/Piston-Motion-Calc/blob/main/test_engine_csv.png?raw=true)
+![Output Example](https://github.com/TomBarstow/Piston-Motion-Calc/tree/p2v-update/test_engine_csv.png?raw=true)
 
 
 Future development:
