@@ -3,9 +3,9 @@
     /// <summary>
     /// Results to be written to CSV - now includes valve lift data
     /// </summary>
-    public class CSVResult
+    public class CSVResults
     {
-        public CSVResult(int angle, double pistonPosition, double pistonVelocity)
+        public CSVResults(int angle, double pistonPosition, double pistonVelocity)
         {
             Angle = angle;
             PistonPosition = pistonPosition;
@@ -14,7 +14,7 @@
             ExhaustValveLift = 0;
         }
 
-        public CSVResult(int angle, double pistonPosition, double pistonVelocity, double intakeValveLift, double exhaustValveLift)
+        public CSVResults(int angle, double pistonPosition, double pistonVelocity, double intakeValveLift, double exhaustValveLift)
         {
             Angle = angle;
             PistonPosition = pistonPosition;

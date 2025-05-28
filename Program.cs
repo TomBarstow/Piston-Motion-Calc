@@ -11,13 +11,8 @@ namespace PistonMotion
     /// </summary>
     class Program
     {
-        public double MaxVelocity { get; set; }
-        public int MaxVelocityDeg { get; set; }
         public static void Main(string[] args)
         {
-<<<<<<< Updated upstream
-            //Title
-=======
             DisplayTitle();
 
             while (true)
@@ -56,24 +51,20 @@ namespace PistonMotion
 
         private static void DisplayTitle()
         {
->>>>>>> Stashed changes
             Console.WriteLine(" _____________       _____                   ______  ___     __________              ");
             Console.WriteLine(" ___  __ \\__(_)________  /_____________      ___   |/  /_______  /___(_)____________ ");
             Console.WriteLine(" __  /_/ /_  /__  ___/  __/  __ \\_  __ \\     __  /|_/ /_  __ \\  __/_  /_  __ \\_  __ \\");
             Console.WriteLine(" _  ____/_  / _(__  )/ /_ / /_/ /  / / /     _  /  / / / /_/ / /_ _  / / /_/ /  / / /");
             Console.WriteLine(" /_/     /_/  /____/ \\__/ \\____//_/ /_/      /_/  /_/  \\____/\\__/ /_/  \\____//_/ /_/ ");
-<<<<<<< Updated upstream
-            Console.WriteLine("\n\t\t\t Piston Motion and Velocity Calc v0.3 \n \t Enter stroke, rod length, and max RPM - Outputs velocity to CSV\n");
-=======
-            Console.WriteLine("\n\t\t\t Piston Motion and Valve Timing Calc v0.5 \n \t Enter stroke, rod length, max RPM, and cam specs - Outputs motion data to CSV\n");
+            Console.WriteLine("\n\t\t\t Piston Motion and Valve Timing Calc v0.3 \n \t Enter stroke, rod length, max RPM, and cam specs - Outputs motion data to CSV\n");
         }
->>>>>>> Stashed changes
 
-            while (true)
+        private static Arguments GetArguments(string[] args)
+        {
+            var arguments = new Arguments();
+
+            if (args.Length == 0)
             {
-<<<<<<< Updated upstream
-                try
-=======
                 GetArgumentsFromConsole(arguments);
             }
             else
@@ -100,6 +91,10 @@ namespace PistonMotion
 
             Console.Write("File name: ");
             string filename = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(filename))
+            {
+                filename = "debug_output";
+            }
             arguments.Filename = Path.Combine(arguments.FileLocation, filename + ".csv");
 
             Console.Write("Using metric units (mm/cc), y/n? [y]: ");
@@ -111,35 +106,46 @@ namespace PistonMotion
 
             // Engine specifications
             Console.WriteLine("\n=== ENGINE SPECIFICATIONS ===");
+
             Console.Write($"Bore ({units}): ");
-            arguments.Bore = double.Parse(Console.ReadLine());
+            string boreInput = Console.ReadLine();
+            arguments.Bore = string.IsNullOrWhiteSpace(boreInput) ? 100.0 : double.Parse(boreInput);
 
             Console.Write($"Stroke ({units}): ");
-            arguments.Stroke = double.Parse(Console.ReadLine());
+            string strokeInput = Console.ReadLine();
+            arguments.Stroke = string.IsNullOrWhiteSpace(strokeInput) ? 100.0 : double.Parse(strokeInput);
 
             Console.Write($"Rod Length ({units}): ");
-            arguments.RodLength = double.Parse(Console.ReadLine());
+            string rodLengthInput = Console.ReadLine();
+            arguments.RodLength = string.IsNullOrWhiteSpace(rodLengthInput) ? 200.0 : double.Parse(rodLengthInput);
 
             Console.Write($"Block Deck Height ({units}): ");
-            arguments.DeckHeight = double.Parse(Console.ReadLine());
+            string deckHeightInput = Console.ReadLine();
+            arguments.DeckHeight = string.IsNullOrWhiteSpace(deckHeightInput) ? 300.0 : double.Parse(deckHeightInput);
 
             Console.Write($"Piston Compression Height ({units}): ");
-            arguments.CompHeight = double.Parse(Console.ReadLine());
+            string compHeightInput = Console.ReadLine();
+            arguments.CompHeight = string.IsNullOrWhiteSpace(compHeightInput) ? 50.0 : double.Parse(compHeightInput);
 
             Console.Write($"Piston Dome Volume ({volumeUnits}) (Negative for dish): ");
-            arguments.PistonVolume = double.Parse(Console.ReadLine());
+            string pistonVolumeInput = Console.ReadLine();
+            arguments.PistonVolume = string.IsNullOrWhiteSpace(pistonVolumeInput) ? 0.0 : double.Parse(pistonVolumeInput);
 
             Console.Write($"Combustion Chamber Volume ({volumeUnits}): ");
-            arguments.ChamberVolume = double.Parse(Console.ReadLine());
+            string chamberVolumeInput = Console.ReadLine();
+            arguments.ChamberVolume = string.IsNullOrWhiteSpace(chamberVolumeInput) ? 70.0 : double.Parse(chamberVolumeInput);
 
             Console.Write($"Head Gasket Compressed Thickness ({units}): ");
-            arguments.GasketHeight = double.Parse(Console.ReadLine());
+            string gasketHeightInput = Console.ReadLine();
+            arguments.GasketHeight = string.IsNullOrWhiteSpace(gasketHeightInput) ? 1.0 : double.Parse(gasketHeightInput);
 
             Console.Write("Max RPM: ");
-            arguments.RPM = int.Parse(Console.ReadLine());
+            string rpmInput = Console.ReadLine();
+            arguments.RPM = string.IsNullOrWhiteSpace(rpmInput) ? 7000 : int.Parse(rpmInput);
 
             Console.Write("Cylinder Count: ");
-            arguments.CylinderCount = int.Parse(Console.ReadLine());
+            string cylinderCountInput = Console.ReadLine();
+            arguments.CylinderCount = string.IsNullOrWhiteSpace(cylinderCountInput) ? 8 : int.Parse(cylinderCountInput);
 
             // Cam specifications
             Console.WriteLine("\n=== CAM SPECIFICATIONS ===");
@@ -159,39 +165,47 @@ namespace PistonMotion
             string units = isMetric ? "mm" : "inches";
 
             Console.WriteLine("\n--- INTAKE CAM ---");
+
             Console.Write($"Intake cam max lift ({units}): ");
-            camSpec.IntakeCam.MaxLift = double.Parse(Console.ReadLine());
+            string intakeLiftInput = Console.ReadLine();
+            camSpec.IntakeCam.MaxLift = string.IsNullOrWhiteSpace(intakeLiftInput) ? 10.0 : double.Parse(intakeLiftInput);
 
             Console.Write("Intake duration @ 0.050\" (degrees): ");
-            camSpec.IntakeCam.DurationAtLift = double.Parse(Console.ReadLine());
+            string intakeDurationInput = Console.ReadLine();
+            camSpec.IntakeCam.DurationAtLift = string.IsNullOrWhiteSpace(intakeDurationInput) ? 226.0 : double.Parse(intakeDurationInput);
             camSpec.IntakeCam.CheckingLift = isMetric ? 1.27 : 0.050; // Convert 0.050" to mm if metric
 
             Console.Write("Intake lobe centerline (degrees ATDC intake): ");
-            camSpec.IntakeCam.LobeCenterline = double.Parse(Console.ReadLine());
+            string intakeCenterlineInput = Console.ReadLine();
+            camSpec.IntakeCam.LobeCenterline = string.IsNullOrWhiteSpace(intakeCenterlineInput) ? 108.0 : double.Parse(intakeCenterlineInput);
 
-            Console.Write("Intake rocker ratio [1.0]: ");
+            Console.Write("Intake rocker ratio [1.5]: ");
             string intakeRocker = Console.ReadLine();
-            camSpec.IntakeCam.RockerRatio = string.IsNullOrWhiteSpace(intakeRocker) ? 1.0 : double.Parse(intakeRocker);
+            camSpec.IntakeCam.RockerRatio = string.IsNullOrWhiteSpace(intakeRocker) ? 1.5 : double.Parse(intakeRocker);
 
             Console.WriteLine("\n--- EXHAUST CAM ---");
+
             Console.Write($"Exhaust cam max lift ({units}): ");
-            camSpec.ExhaustCam.MaxLift = double.Parse(Console.ReadLine());
+            string exhaustLiftInput = Console.ReadLine();
+            camSpec.ExhaustCam.MaxLift = string.IsNullOrWhiteSpace(exhaustLiftInput) ? 10.0 : double.Parse(exhaustLiftInput);
 
             Console.Write("Exhaust duration @ 0.050\" (degrees): ");
-            camSpec.ExhaustCam.DurationAtLift = double.Parse(Console.ReadLine());
+            string exhaustDurationInput = Console.ReadLine();
+            camSpec.ExhaustCam.DurationAtLift = string.IsNullOrWhiteSpace(exhaustDurationInput) ? 230.0 : double.Parse(exhaustDurationInput);
             camSpec.ExhaustCam.CheckingLift = isMetric ? 1.27 : 0.050; // Convert 0.050" to mm if metric
 
             Console.Write("Exhaust lobe centerline (degrees BTDC exhaust): ");
-            double exhaustCenterlineBTDC = double.Parse(Console.ReadLine());
+            string exhaustCenterlineInput = Console.ReadLine();
+            double exhaustCenterlineBTDC = string.IsNullOrWhiteSpace(exhaustCenterlineInput) ? 116.0 : double.Parse(exhaustCenterlineInput);
             // Convert BTDC exhaust to ATDC from compression TDC
             // Exhaust stroke runs from 540-720° ATDC
             // Exhaust TDC is at 720° (or 0° of next cycle)
             // So BTDC exhaust becomes: 720 - BTDC
             camSpec.ExhaustCam.LobeCenterline = 720 - exhaustCenterlineBTDC;
 
-            Console.Write("Exhaust rocker ratio [1.0]: ");
+            Console.Write("Exhaust rocker ratio: ");
             string exhaustRocker = Console.ReadLine();
-            camSpec.ExhaustCam.RockerRatio = string.IsNullOrWhiteSpace(exhaustRocker) ? 1.0 : double.Parse(exhaustRocker);
+            camSpec.ExhaustCam.RockerRatio = string.IsNullOrWhiteSpace(exhaustRocker) ? 1.5 : double.Parse(exhaustRocker);
 
             // Initialize the cam profiles
             camSpec.Initialize();
@@ -272,101 +286,26 @@ namespace PistonMotion
             {
                 Console.WriteLine("Validation errors:");
                 foreach (var error in validationErrors)
->>>>>>> Stashed changes
                 {
-                    var arguments = new Arguments();
-                    var globals = new Globals();
-
-                    if (args.Length == 0)
-                    {
-                        Console.Write("File location (Defaults to Temp:) \t");
-                        string _testFileLocation = Console.ReadLine();
-                        if (_testFileLocation != null)
-                        {
-                            arguments.FileLocation = "C:\\Windows\\Temp\\Piston-Motion-Calc\\";
-                        }
-                        else
-                        {
-                            arguments.FileLocation = _testFileLocation;
-                        }
-                        Console.Write("File name: \t \t \t \t");
-                        arguments.Filename = arguments.FileLocation + Console.ReadLine() + ".csv";
-                        Console.Write("Bore: \t \t \t \t \t");
-                        arguments.Bore = double.Parse(Console.ReadLine());
-                        Console.Write("Stroke: \t \t \t \t");
-                        arguments.Stroke = double.Parse(Console.ReadLine());
-                        Console.Write("Rod Length: \t \t \t \t");
-                        arguments.RodLength = double.Parse(Console.ReadLine());
-                        Console.Write("Block Deck Height: \t \t \t");
-                        arguments.DeckHeight = double.Parse(Console.ReadLine());
-                        Console.Write("Piston Compression Height: \t \t");
-                        arguments.CompHeight = double.Parse(Console.ReadLine());
-                        Console.Write("Head Gasket Compressed Thickness: \t");
-                        arguments.GasketHeight = double.Parse(Console.ReadLine());
-                        Console.Write("Max RPM: \t \t \t \t");
-                        arguments.RPM = int.Parse(Console.ReadLine());
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Arguments: {args[0]},{args[1]},{args[2]},{args[3]},{args[4]},{args[5]},{args[6]},{args[7]}");
-                        arguments.Filename = args[0];
-                        arguments.Bore = double.Parse(args[1]);
-                        arguments.Stroke = double.Parse(args[2]);
-                        arguments.RodLength = double.Parse(args[3]);
-                        arguments.DeckHeight= double.Parse(args[4]);
-                        arguments.CompHeight= double.Parse(args[5]);
-                        arguments.GasketHeight= double.Parse(args[6]);
-                        arguments.RPM = int.Parse(args[7]);
-                        break;
-                    }
-
-                    Console.WriteLine("\n");
-                    var results = Calculate(arguments, globals);
-
-                    ConsoleOutput(globals.MaxVelocity, globals.MaxVelocityDeg);
-
-                    SaveResults(arguments.FileLocation, arguments.Filename, results);
-                    Console.WriteLine("\n\n");
-
+                    Console.WriteLine($"  - {error}");
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.ToString());
-                }
+                return false;
             }
 
-
-
+            return true;
         }
 
-<<<<<<< Updated upstream
-        public static List<PistonResult> Calculate(Arguments arguments, Globals globals)
+        public static List<CSVResults> Calculate(Arguments arguments, ConsoleResults results)
         {
-            var results = new List<PistonResult>();
+            var csvResults = new List<CSVResults>();
 
-            double angVelocity = 2 * Math.PI * (arguments.RPM / 60);
-            double radius = arguments.Stroke / 2;
-=======
-        public static List<CSVResult> Calculate(Arguments arguments, ConsoleResults results)
-        {
-            var csvResults = new List<CSVResult>();
->>>>>>> Stashed changes
-
+            double angVelocity = 2 * Math.PI * (arguments.RPM / 60.0);
+            double radius = arguments.Stroke / 2.0;
             double totalDeckHeight = arguments.DeckHeight + arguments.GasketHeight;
 
-            //double maxVelocity = 0.0f;
-            //int maxVelocityDeg;
+            // Calculate static results
+            CalculateStaticResults(arguments, results);
 
-<<<<<<< Updated upstream
-            for (int angle = 0; angle <= 180; angle++)
-            {
-                //Degrees to radians
-                double radAngle = ((double)angle / 180) * Math.PI;
-
-                //Piston maths
-                double negRadius = radius * -1;
-                double sqrRadius = Math.Pow((double)radius, 2);
-=======
             // Calculate piston motion for full 720-degree 4-stroke cycle
             for (int angle = 0; angle < 720; angle++)
             {
@@ -374,24 +313,16 @@ namespace PistonMotion
                 // but we track the full 720-degree cycle for valve events
                 double pistonAngle = angle % 360;
                 double radAngle = (pistonAngle / 180.0) * Math.PI;
->>>>>>> Stashed changes
                 double sinAngle = Math.Sin(radAngle);
                 double cosAngle = Math.Cos(radAngle);
-                double sqrRodl = Math.Pow(arguments.RodLength, 2);
 
-                double velocity = CalculateVelocity(angVelocity, negRadius, sqrRadius, sinAngle, cosAngle, sqrRodl);
-                
-                var x = radius * cosAngle + Math.Sqrt(sqrRodl - sqrRadius * Math.Pow(sinAngle, 2));
-                var pistonPosition = 0 - (totalDeckHeight - (x + arguments.CompHeight));
+                // Calculate piston velocity
+                double velocity = CalculateVelocity(angVelocity, radius, sinAngle, cosAngle, arguments.RodLength);
 
-<<<<<<< Updated upstream
-                var result = new PistonResult(angle, pistonPosition, velocity);
+                // Calculate piston position
+                double x = radius * cosAngle + Math.Sqrt(Math.Pow(arguments.RodLength, 2) - Math.Pow(radius * sinAngle, 2));
+                double pistonPosition = -(totalDeckHeight - (x + arguments.CompHeight));
 
-                results.Add(result);
-
-                //Check for peak velocity
-                if (globals.MaxVelocity < velocity)
-=======
                 // Calculate valve lifts if cam profile is included
                 double intakeValveLift = 0;
                 double exhaustValveLift = 0;
@@ -403,42 +334,77 @@ namespace PistonMotion
                     exhaustValveLift = valveLifts.ExhaustLift;
                 }
 
-                var result = new CSVResult(angle, pistonPosition, velocity, intakeValveLift, exhaustValveLift);
+                var result = new CSVResults(angle, pistonPosition, velocity, intakeValveLift, exhaustValveLift);
                 csvResults.Add(result);
 
                 // Track peak velocity (only consider first 360 degrees to avoid duplicates)
                 if (angle < 360 && results.MaxVelocity < velocity)
->>>>>>> Stashed changes
                 {
-                    globals.MaxVelocity = velocity;
-                    globals.MaxVelocityDeg = angle;
+                    results.MaxVelocity = velocity;
+                    results.MaxVelocityDeg = angle;
                 }
             }
 
-            return results;
+            return csvResults;
         }
-<<<<<<< Updated upstream
-        //Method for calculating piston velocity
-        private static double CalculateVelocity(double angVelocity, double negRadius, double sqrRadius, double sinAngle, double cosAngle, double sqrRodl)
-=======
 
         private static void CalculateStaticResults(Arguments arguments, ConsoleResults results)
->>>>>>> Stashed changes
         {
-            return Math.Abs(angVelocity * (negRadius * sinAngle - ((sqrRadius * sinAngle * cosAngle) / (Math.Sqrt(sqrRodl - sqrRadius * Math.Pow(sinAngle, 2))))));
+            // Displacement per cylinder (total for all cylinders)
+            double cylinderVolume = Math.PI * Math.Pow(arguments.Bore / 2.0, 2) * arguments.Stroke;
+            results.Displacement = cylinderVolume * arguments.CylinderCount;
+
+            // Bore to stroke ratio
+            results.BoreRatio = arguments.Bore / arguments.Stroke;
+
+            // Rod ratio
+            results.RodRatio = arguments.RodLength / arguments.Stroke;
+
+            // Piston to deck
+            results.Piston2deck = (arguments.DeckHeight + arguments.GasketHeight) -
+                                 (arguments.RodLength + arguments.CompHeight + arguments.Stroke / 2.0);
+
+            // Compression ratio - fixed calculation
+            results.CompressionRatio = CalculateCompressionRatio(arguments);
         }
 
-        //Method for outputting max velocity to console
-        public static void ConsoleOutput(double maxVel, int maxDeg)
+        private static double CalculateCompressionRatio(Arguments arguments)
         {
-            Console.WriteLine("Peak piston velocity is " + maxVel + " at " + maxDeg + " degrees");
+            // Swept volume (cylinder displacement)
+            double sweptVolume = Math.PI * Math.Pow(arguments.Bore / 2.0, 2) * arguments.Stroke;
+
+            // Gasket volume 
+            double gasketVolume = Math.PI * Math.Pow(arguments.Bore / 2.0, 2) * arguments.GasketHeight;
+
+            // Clearance volume = chamber volume + gasket volume - piston dome volume
+            double clearanceVolume = arguments.ChamberVolume + gasketVolume - arguments.PistonVolume;
+
+            // Unit conversion handling
+            if (arguments.IsMetric)
+            {
+                // Metric: bore/stroke in mm creates volume in mm³
+                // Chamber/piston volumes typically entered in cc (cm³)
+                // Convert cc to mm³: 1 cc = 1000 mm³
+                double chamberAndPistonInMM3 = (arguments.ChamberVolume - arguments.PistonVolume) * 1000;
+                clearanceVolume = chamberAndPistonInMM3 + gasketVolume;
+            }
+            else
+            {
+                // Imperial: bore/stroke in inches creates volume in in³
+                // Chamber/piston volumes should be in in³ (cubic inches)
+                clearanceVolume = (arguments.ChamberVolume - arguments.PistonVolume) + gasketVolume;
+            }
+
+            if (clearanceVolume <= 0)
+            {
+                throw new InvalidOperationException("Clearance volume must be positive. Check chamber volume and piston volume values.");
+            }
+
+            return (sweptVolume + clearanceVolume) / clearanceVolume;
         }
 
-        public static void SaveResults(string fileLocation, string fileName, List<PistonResult> results)
+        private static double CalculateVelocity(double angVelocity, double radius, double sinAngle, double cosAngle, double rodLength)
         {
-<<<<<<< Updated upstream
-            if (!Directory.Exists(fileLocation))
-=======
             double term1 = radius * sinAngle;
             double term2 = (Math.Pow(radius, 2) * sinAngle * cosAngle) /
                           Math.Sqrt(Math.Pow(rodLength, 2) - Math.Pow(radius * sinAngle, 2));
@@ -455,31 +421,10 @@ namespace PistonMotion
             // Convert displacement for display
             double displayDisplacement = results.Displacement;
             if (arguments.IsMetric)
->>>>>>> Stashed changes
             {
-                Directory.CreateDirectory(fileLocation);
-            }
-            
-            if (File.Exists(fileName))
-            {
-                File.Delete(fileName);
+                displayDisplacement = displayDisplacement / 1000; // Convert cubic mm to cc
             }
 
-<<<<<<< Updated upstream
-            var stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine("angle,ppos,pvel");
-
-            foreach(var result in results)
-            {
-                stringBuilder.AppendLine($"{result}");
-            }
-
-            File.WriteAllText(fileName, stringBuilder.ToString());
-
-            Console.WriteLine($"File results written to {fileName}");
-        }
-
-=======
             Console.WriteLine("\n=== CALCULATION RESULTS ===");
             Console.WriteLine($"Total swept displacement: \t\t{displayDisplacement:F2} {volumeUnits}");
             Console.WriteLine($"Bore to Stroke Ratio: \t\t\t{results.BoreRatio:F3}");
@@ -498,7 +443,7 @@ namespace PistonMotion
             }
         }
 
-        public static void SaveResults(string fileLocation, string fileName, List<CSVResult> csvResults)
+        public static void SaveResults(string fileLocation, string fileName, List<CSVResults> csvResults)
         {
             try
             {
@@ -547,6 +492,5 @@ namespace PistonMotion
                 Console.WriteLine($"Error saving file: {ex.Message}");
             }
         }
->>>>>>> Stashed changes
     }
 }

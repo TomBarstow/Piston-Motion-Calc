@@ -1,22 +1,21 @@
-﻿using static PistonMotion.CamProfile;
-
-namespace PistonMotion
+﻿namespace PistonMotion
 {
     public class Arguments
     {
-        public string FileLocation { get; set; }
-        public string Filename { get; set; }
+        public string FileLocation { get; set; } = "C:\\Windows\\Temp\\Piston-Motion-Calc\\";
+        public string Filename { get; set; } = "";
+        public bool IsMetric { get; set; } = true;
         public double Stroke { get; set; }
         public double Bore { get; set; }
         public double RodLength { get; set; }
         public double DeckHeight { get; set; }
         public double CompHeight { get; set; }
+        public double PistonVolume { get; set; }
+        public double ChamberVolume { get; set; }
         public double GasketHeight { get; set; }
         public int RPM { get; set; }
+        public int CylinderCount { get; set; } = 1;
 
-<<<<<<< Updated upstream
-
-=======
         // Cam profile related properties
         public bool IncludeCamProfile { get; set; } = false;
         public CamSpecification CamSpec { get; set; }
@@ -95,6 +94,5 @@ namespace PistonMotion
 
             return baseInfo;
         }
->>>>>>> Stashed changes
     }
 }
